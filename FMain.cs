@@ -860,7 +860,7 @@ namespace EncRotator
             calibration = true;
             miSetNorth.Enabled = false;
             miCalibrate.Text = "Остановить калибровку";
-            slCalibration.Text = "Калибровка";
+            slCalibration.Visible = true;
             engine(dir);
         }
 
@@ -880,12 +880,12 @@ namespace EncRotator
                 pMap.Invalidate();
                 angleChanged = false;
                 mvtBlink = !mvtBlink;
-                slMvt.BackColor = mvtBlink ? Color.Red : lAngle.BackColor;
+                slMvt.DisplayStyle = mvtBlink ? ToolStripItemDisplayStyle.Image : ToolStripItemDisplayStyle.Text;
                 noMoveTime = 0;
             }
             else
             {
-                slMvt.BackColor = lAngle.BackColor;
+                slMvt.DisplayStyle = ToolStripItemDisplayStyle.Text;
                 if ( engineStatus != 0 && currentConnection != null && currentConnection.deviceType == 0 && !awaitingLimitConfirmation)
                     if (++noMoveTime > 5 )
                     {
@@ -1025,7 +1025,7 @@ namespace EncRotator
             calibration = false;
             engine(0);
             miCalibrate.Text = "Калибровать";
-            slCalibration.Text = "";
+            slCalibration.Visible = false;
         }
 
         private void miCalibrate_Click(object sender, EventArgs e)

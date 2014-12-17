@@ -31,8 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fMain));
             this.ofdMap = new System.Windows.Forms.OpenFileDialog();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.miParams = new System.Windows.Forms.ToolStripMenuItem();
             this.miConnections = new System.Windows.Forms.ToolStripMenuItem();
             this.miNewConnection = new System.Windows.Forms.ToolStripMenuItem();
             this.miEditConnections = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,42 +44,20 @@
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.pMap = new System.Windows.Forms.PictureBox();
-            this.slMvt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lAngle = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.slCalibration = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.bSizeM = new System.Windows.Forms.ToolStripButton();
             this.bSizeP = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.slMvt = new System.Windows.Forms.ToolStripLabel();
+            this.lAngle = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bStop = new System.Windows.Forms.ToolStripButton();
-            this.menuStrip1.SuspendLayout();
+            this.ddSettings = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.slCalibration = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).BeginInit();
-            this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miParams});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(526, 24);
-            this.menuStrip1.TabIndex = 14;
-            this.menuStrip1.Text = "menuStrip";
-            // 
-            // miParams
-            // 
-            this.miParams.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miConnections,
-            this.miMaps,
-            this.miSetNorth,
-            this.miCalibrate,
-            this.miClearStops,
-            this.miModuleSettings});
-            this.miParams.Name = "miParams";
-            this.miParams.Size = new System.Drawing.Size(73, 20);
-            this.miParams.Text = "Настройки";
             // 
             // miConnections
             // 
@@ -180,52 +156,29 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pMap.Location = new System.Drawing.Point(0, 52);
+            this.pMap.Location = new System.Drawing.Point(0, 29);
             this.pMap.Name = "pMap";
-            this.pMap.Size = new System.Drawing.Size(526, 377);
+            this.pMap.Size = new System.Drawing.Size(526, 421);
             this.pMap.TabIndex = 16;
             this.pMap.TabStop = false;
             this.pMap.Paint += new System.Windows.Forms.PaintEventHandler(this.pMap_Paint);
             this.pMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMap_MouseClick);
             this.pMap.Resize += new System.EventHandler(this.pMap_Resize);
             // 
-            // slMvt
-            // 
-            this.slMvt.AutoSize = false;
-            this.slMvt.Name = "slMvt";
-            this.slMvt.Size = new System.Drawing.Size(17, 19);
-            // 
-            // lAngle
-            // 
-            this.lAngle.AutoSize = false;
-            this.lAngle.Name = "lAngle";
-            this.lAngle.Size = new System.Drawing.Size(40, 19);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.slMvt,
-            this.lAngle,
-            this.slCalibration});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 429);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(526, 24);
-            this.statusStrip1.TabIndex = 15;
-            this.statusStrip1.Text = "statusStrip";
-            // 
-            // slCalibration
-            // 
-            this.slCalibration.AutoSize = false;
-            this.slCalibration.Name = "slCalibration";
-            this.slCalibration.Size = new System.Drawing.Size(80, 19);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bSizeM,
             this.bSizeP,
-            this.bStop});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStripSeparator1,
+            this.slMvt,
+            this.lAngle,
+            this.toolStripSeparator2,
+            this.bStop,
+            this.ddSettings,
+            this.toolStripSeparator3,
+            this.slCalibration});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(526, 26);
             this.toolStrip1.TabIndex = 17;
@@ -233,7 +186,7 @@
             // 
             // bSizeM
             // 
-            this.bSizeM.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bSizeM.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.bSizeM.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.bSizeM.Image = ((System.Drawing.Image)(resources.GetObject("bSizeM.Image")));
             this.bSizeM.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -244,26 +197,86 @@
             // 
             // bSizeP
             // 
-            this.bSizeP.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bSizeP.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.bSizeP.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.bSizeP.Image = ((System.Drawing.Image)(resources.GetObject("bSizeP.Image")));
             this.bSizeP.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bSizeP.Name = "bSizeP";
-            this.bSizeP.Size = new System.Drawing.Size(25, 23);
+            this.bSizeP.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.bSizeP.Size = new System.Drawing.Size(23, 23);
             this.bSizeP.Text = "+";
             this.bSizeP.Click += new System.EventHandler(this.lSizeP_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 26);
+            // 
+            // slMvt
+            // 
+            this.slMvt.AutoSize = false;
+            this.slMvt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.slMvt.Image = ((System.Drawing.Image)(resources.GetObject("slMvt.Image")));
+            this.slMvt.ImageTransparentColor = System.Drawing.Color.White;
+            this.slMvt.IsLink = true;
+            this.slMvt.Name = "slMvt";
+            this.slMvt.Size = new System.Drawing.Size(16, 23);
+            // 
+            // lAngle
+            // 
+            this.lAngle.AutoSize = false;
+            this.lAngle.Name = "lAngle";
+            this.lAngle.Size = new System.Drawing.Size(45, 23);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
+            // 
             // bStop
             // 
+            this.bStop.BackColor = System.Drawing.Color.Red;
             this.bStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bStop.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bStop.ForeColor = System.Drawing.Color.Red;
+            this.bStop.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.bStop.ForeColor = System.Drawing.Color.White;
             this.bStop.Image = ((System.Drawing.Image)(resources.GetObject("bStop.Image")));
             this.bStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bStop.Name = "bStop";
-            this.bStop.Size = new System.Drawing.Size(53, 23);
-            this.bStop.Text = "STOP";
+            this.bStop.Size = new System.Drawing.Size(57, 23);
+            this.bStop.Text = " Stop ";
             this.bStop.Click += new System.EventHandler(this.bStop_Click);
+            // 
+            // ddSettings
+            // 
+            this.ddSettings.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.ddSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ddSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miConnections,
+            this.miMaps,
+            this.miSetNorth,
+            this.miCalibrate,
+            this.miClearStops,
+            this.miModuleSettings});
+            this.ddSettings.ForeColor = System.Drawing.Color.Transparent;
+            this.ddSettings.Image = ((System.Drawing.Image)(resources.GetObject("ddSettings.Image")));
+            this.ddSettings.ImageTransparentColor = System.Drawing.Color.Black;
+            this.ddSettings.Name = "ddSettings";
+            this.ddSettings.Size = new System.Drawing.Size(29, 23);
+            this.ddSettings.Text = "toolStripDropDownButton1";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 26);
+            // 
+            // slCalibration
+            // 
+            this.slCalibration.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.slCalibration.ForeColor = System.Drawing.Color.Red;
+            this.slCalibration.Name = "slCalibration";
+            this.slCalibration.Size = new System.Drawing.Size(105, 23);
+            this.slCalibration.Text = "Калибровка";
+            this.slCalibration.Visible = false;
             // 
             // fMain
             // 
@@ -272,18 +285,12 @@
             this.ClientSize = new System.Drawing.Size(526, 453);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pMap);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fMain";
             this.Text = "Нет соединения";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fMain_FormClosing);
             this.Resize += new System.EventHandler(this.fMain_Resize);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -294,8 +301,6 @@
         #endregion
 
         private System.Windows.Forms.OpenFileDialog ofdMap;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem miParams;
         private System.Windows.Forms.ToolStripMenuItem miModuleSettings;
         private System.ComponentModel.BackgroundWorker bgWorker;
         private System.Windows.Forms.Timer timer;
@@ -309,14 +314,17 @@
         private System.Windows.Forms.ToolStripMenuItem miMaps;
         private System.Windows.Forms.ToolStripMenuItem miMapAdd;
         private System.Windows.Forms.ToolStripMenuItem miMapRemove;
-        private System.Windows.Forms.ToolStripStatusLabel slMvt;
-        private System.Windows.Forms.ToolStripStatusLabel lAngle;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel slCalibration;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton bSizeM;
         private System.Windows.Forms.ToolStripButton bSizeP;
         private System.Windows.Forms.ToolStripButton bStop;
+        private System.Windows.Forms.ToolStripDropDownButton ddSettings;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel slMvt;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel lAngle;
+        private System.Windows.Forms.ToolStripLabel slCalibration;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 
