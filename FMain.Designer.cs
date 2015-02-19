@@ -53,6 +53,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bStop = new System.Windows.Forms.ToolStripButton();
             this.ddSettings = new System.Windows.Forms.ToolStripDropDownButton();
+            this.miRelays = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.slCalibration = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).BeginInit();
@@ -256,6 +257,7 @@
             this.miSetNorth,
             this.miCalibrate,
             this.miClearStops,
+            this.miRelays,
             this.miModuleSettings});
             this.ddSettings.ForeColor = System.Drawing.Color.Transparent;
             this.ddSettings.Image = ((System.Drawing.Image)(resources.GetObject("ddSettings.Image")));
@@ -263,6 +265,15 @@
             this.ddSettings.Name = "ddSettings";
             this.ddSettings.Size = new System.Drawing.Size(29, 23);
             this.ddSettings.Text = "toolStripDropDownButton1";
+            // 
+            // miRelays
+            // 
+            this.miRelays.CheckOnClick = true;
+            this.miRelays.Name = "miRelays";
+            this.miRelays.Size = new System.Drawing.Size(186, 22);
+            this.miRelays.Text = "Управление реле";
+            this.miRelays.Visible = false;
+            this.miRelays.CheckStateChanged += new System.EventHandler(this.miRelays_CheckStateChanged);
             // 
             // toolStripSeparator3
             // 
@@ -325,6 +336,7 @@
         private System.Windows.Forms.ToolStripLabel lAngle;
         private System.Windows.Forms.ToolStripLabel slCalibration;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem miRelays;
     }
 }
 

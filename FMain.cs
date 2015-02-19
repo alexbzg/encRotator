@@ -28,7 +28,8 @@ namespace EncRotator
                     new DeviceTemplate { engineLines = new Dictionary<int,string>{ {1, "16"}, {-1, "19"} }, 
                                             encLines = new String[] { "21", "22", "1", "2", "3", "4", "5", "6", "11", "12" },
                                             ledLine = "20" },
-                    new DeviceTemplate { engineLines = new Dictionary<int,string>{ {1, "12"}, {-1, "11"} }, 
+                    new DeviceTemplate { engineLines = new Dictionary<int,string>{ {1, "5"}, {-1, "4"} }, slowLine = "3",
+                                            relays = new String[] { "1", "2", "6", "9" },
                                             adc = "1" } 
                                     };
         DeviceTemplate currentTemplate;
@@ -44,6 +45,8 @@ namespace EncRotator
         int targetAngle = -1;
         int engineStatus = 0;
         int mapAngle = -1;
+        int startAngle = -1;
+        bool slowState = false;
         bool angleChanged = false;
         bool mvtBlink = false;
         List<Bitmap> maps = new List<Bitmap>();
@@ -60,6 +63,7 @@ namespace EncRotator
         int curADCVal;
         int calCount = 0;
         bool awaitingLimitConfirmation = false;
+        FRelays fr = null;
 
         public int getCurrentAngle() {
             return currentAngle;
@@ -126,15 +130,23 @@ namespace EncRotator
                 { { -1, currentConnection.limits[0] }, 
                 {1, currentConnection.limits[1] } };
 
-            if (currentConnection.deviceType == 0)
-                currentTemplate = templates[currentConnection.soft ? 0 : 1];
-            else
-                currentTemplate = templates[2];
+            currentTemplate = getTemplate( currentConnection.deviceType );
+            for (int co = currentConnection.relayLabels.Count(); co < currentTemplate.relays.Count(); co++)
+                currentConnection.relayLabels.Add("");
+            writeConfig();
+
 
             connect();
             pMap.Refresh();
         }
 
+        private DeviceTemplate getTemplate(int deviceType)
+        {
+            if (deviceType == 0)
+                return templates[currentConnection.soft ? 0 : 1];
+            else
+                return templates[2];
+        }
 
 
         private void miModuleSettings_Click(object sender, EventArgs e)
@@ -168,29 +180,41 @@ namespace EncRotator
         public void engine(int val)
         {
             if ( val != engineStatus ) {
-                Cursor tmpCursor = Cursor.Current;
-                Cursor.Current = Cursors.WaitCursor;
+                this.UseWaitCursor = true;
+                /*Cursor tmpCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;*/
                 if (val == 0 || engineStatus != 0)
                 {
                     if (currentConnection.deviceType == 0 && currentConnection.soft)
                     {
-                        toggleLine(currentTemplate.slowLine, "0");
+                        setSlow(false);
                         Thread.Sleep(3000);
                     }
+                    else if (currentConnection.deviceType == 1)
+                        setSlow(false);
                     toggleLine(currentTemplate.engineLines[engineStatus], "0");
                 }
                 if ( val != 0 ) {
+                    if (currentConnection.deviceType == 1)
+                        setSlow(true);
                     toggleLine(currentTemplate.engineLines[val], "1");
                     if (currentConnection.deviceType == 0 && currentConnection.soft)
                     {
                         Thread.Sleep(500);
-                        toggleLine(currentTemplate.slowLine, "1");
+                        setSlow(true);
                     }
                 }
                 engineStatus = val;
                 System.Diagnostics.Debug.WriteLine("engine " + val.ToString());
-                Cursor.Current = tmpCursor;
+                this.UseWaitCursor = false;
+                //Cursor.Current = tmpCursor;
             }
+        }
+
+        private void setSlow(bool val)
+        {
+            toggleLine(currentTemplate.slowLine, val ? "1" : "0");
+            slowState = val;
         }
 
         private void doDisconnect() {
@@ -434,6 +458,7 @@ namespace EncRotator
                             miCalibrate.Text = "Калибровать";
                             miSetNorth.Enabled = currentConnection.calibrated;
                             miClearStops.Visible = false;
+                            miRelays.Visible = true;
                         }
 
                         Text = currentConnection.name;
@@ -533,16 +558,26 @@ namespace EncRotator
                         engineStatus = -engineStatus;
                     }
                 }*/
-                if (engineStatus != 0 && currentConnection.deviceType == 0)
+                if (engineStatus != 0)
                 {
-                    int nStop = getNearestStop(engineStatus);
-                    if (nStop != -1)
+                    if (currentConnection.deviceType == 0)
                     {
-                        int dS = aD(nStop, currentAngle);
-                        if ( Math.Sign( dS ) == engineStatus && Math.Abs(dS) < 7 )
-                            engine(0);
-                    }
+                        int nStop = getNearestStop(engineStatus);
+                        if (nStop != -1)
+                        {
+                            int dS = aD(nStop, currentAngle);
+                            if (Math.Sign(dS) == engineStatus && Math.Abs(dS) < 7)
+                                engine(0);
+                        }
 
+                    }
+                    else 
+                    {
+                        if (slowState && Math.Abs(startAngle - currentAngle) > currentConnection.slowInt)
+                            setSlow(false);
+                        else if (!slowState && Math.Abs(currentAngle - startAngle) < currentConnection.slowInt)
+                            setSlow(true);
+                    }
                 }
                 currentAngle = newAngle;
                 angleChanged = true;
@@ -1067,7 +1102,31 @@ namespace EncRotator
             pMap.Invalidate();
         }
 
-       
+        private void miRelays_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (miRelays.Checked)
+            {
+                fr = new FRelays(currentConnection.relayLabels);
+                fr.StartPosition = FormStartPosition.Manual;
+                fr.Top = Top;
+                fr.Left = Left + Width;
+                fr.FormClosed += new FormClosedEventHandler(delegate(object obj, FormClosedEventArgs ee)
+                {
+                    miRelays.Checked = false;
+                });
+                fr.RelayButtonStateChanged += relayButtonStateChanged;
+                fr.Show(this);
+            }
+            else 
+            {
+                fr.Close();
+            }
+        }
+
+        private void relayButtonStateChanged(object obj, RelayButtonStateChangedEventArgs e)
+        {
+            toggleLine(currentTemplate.relays[e.relay], e.state ? "1" : "0");
+        }
 
 
     }
@@ -1076,6 +1135,7 @@ namespace EncRotator
     {
         internal Dictionary<int, string> engineLines;
         internal string[] encLines;
+        internal string[] relays;
         internal string ledLine;
         internal string slowLine;
         internal string adc;
@@ -1095,6 +1155,7 @@ namespace EncRotator
         public bool soft = true;
         public int icon = 0;
         public bool calibrated = false;
+        public List<String> relayLabels = new List<String>();
     }
 
     public class FormState
@@ -1102,7 +1163,7 @@ namespace EncRotator
         public int currentConnection = -1;
         public List<string> maps = new List<string>();
         public int currentMap = -1;
-        public List<ConnectionSettings> connections = new List<ConnectionSettings>();
+        public List<ConnectionSettings> connections = new List<ConnectionSettings>();        
     }
 
     public static class CommonInf

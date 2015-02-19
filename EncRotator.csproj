@@ -107,6 +107,12 @@
     <Compile Include="FModuleSettings.designer.cs">
       <DependentUpon>FModuleSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="FRelays.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FRelays.Designer.cs">
+      <DependentUpon>FRelays.cs</DependentUpon>
+    </Compile>
     <Compile Include="FSetNorth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FModuleSettings.resx">
       <DependentUpon>FModuleSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FRelays.resx">
+      <DependentUpon>FRelays.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FSetNorth.resx">
       <DependentUpon>FSetNorth.cs</DependentUpon>
