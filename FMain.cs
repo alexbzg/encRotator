@@ -47,6 +47,7 @@ namespace EncRotator
         int mapAngle = -1;
         int startAngle = -1;
         bool slowState = false;
+        bool slowOffFlag = false;
         bool angleChanged = false;
         bool mvtBlink = false;
         List<Bitmap> maps = new List<Bitmap>();
@@ -214,30 +215,34 @@ namespace EncRotator
         private void setSlow(bool val)
         {
             toggleLine(currentTemplate.slowLine, val ? "1" : "0");
+            System.Diagnostics.Debug.WriteLine("slow " + (val ? "1" : "0"));
             slowState = val;
         }
 
         private void doDisconnect() {
-            Text = "Нет соединения";
-            Icon = (Icon)Resources.ResourceManager.GetObject(CommonInf.icons[0]);
-            miConnections.Text = "Соединения";
-            if ( connectionsDropdown != null )
-                miConnections.DropDownItems.AddRange(connectionsDropdown);
-            miSetNorth.Visible = false;
-            miCalibrate.Visible = false;
-            miClearStops.Visible = false;
-            timer.Enabled = false;
-            if (socket != null)
+            this.Invoke((MethodInvoker)delegate
             {
-                if (currentConnection.deviceType == 0)
-                    toggleLine(currentTemplate.ledLine, "0");                
-                bgWorker.CancelAsync();                
-                if (socket.Connected)
-                    socket.Close();
-                socket = null;
-            }
-            currentConnection = null;
-            pMap.Invalidate();
+                Text = "Нет соединения";
+                Icon = (Icon)Resources.ResourceManager.GetObject(CommonInf.icons[0]);
+                miConnections.Text = "Соединения";
+                if (connectionsDropdown != null)
+                    miConnections.DropDownItems.AddRange(connectionsDropdown);
+                miSetNorth.Visible = false;
+                miCalibrate.Visible = false;
+                miClearStops.Visible = false;
+                timer.Enabled = false;
+                if (socket != null)
+                {
+                    if (currentConnection.deviceType == 0)
+                        toggleLine(currentTemplate.ledLine, "0");
+                    bgWorker.CancelAsync();
+                    if (socket.Connected)
+                        socket.Close();
+                    socket = null;
+                }
+                currentConnection = null;
+                pMap.Invalidate();
+            });
         }
 
         private string _socketRead()
@@ -274,7 +279,7 @@ namespace EncRotator
         {
             var tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
-            int timeOut = 500; // 1000 ms
+            int timeOut = 2000; // 1000 ms
 
             Task<string> task = Task.Factory.StartNew<string>(() => _socketRead(), token);
 
@@ -335,7 +340,7 @@ namespace EncRotator
             {
                 socket = new TcpClient();
                 IAsyncResult connResult = socket.BeginConnect(host, Convert.ToInt32(port), null, null);
-                if (connResult.AsyncWaitHandle.WaitOne(3000, true))
+                if (connResult.AsyncWaitHandle.WaitOne(5000, true))
                 {
                     socket.SendTimeout = 50;
                     socket.ReceiveTimeout = 50;
@@ -523,6 +528,8 @@ namespace EncRotator
                     }
                     else if (currentConnection.deviceType == 1)
                     {
+                        startAngle = currentAngle;
+                        slowOffFlag = false;
                         int rt = currentAngle + d;
                         if (rt < 0 || rt > 450)
                             dir = -dir;
@@ -573,10 +580,11 @@ namespace EncRotator
                     }
                     else 
                     {
-                        if (slowState && Math.Abs(startAngle - currentAngle) > currentConnection.slowInt)
+                        if (slowState && startAngle != -1 && !slowOffFlag && Math.Abs(startAngle - currentAngle) > currentConnection.slowInt)
+                        {
                             setSlow(false);
-                        else if (!slowState && Math.Abs(currentAngle - startAngle) < currentConnection.slowInt)
-                            setSlow(true);
+                            slowOffFlag = true;
+                        }
                     }
                 }
                 currentAngle = newAngle;
@@ -586,6 +594,10 @@ namespace EncRotator
                     /*mapAngle = currentAngle - northAngle + (currentAngle < northAngle ? 360 : 0);
                     pMap.Refresh();*/
                     int tD = aD(targetAngle, currentAngle);
+
+                    if (Math.Sign(tD) == engineStatus && !slowState && currentConnection.deviceType == 1 && Math.Abs(tD) < 2 * currentConnection.slowInt)
+                        setSlow(true);
+
                     if (Math.Sign(tD) == engineStatus && Math.Abs(tD) < currentConnection.slowInt)
                     {
                         engine(0);
