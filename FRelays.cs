@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using InputBox;
 
 namespace EncRotator
 {
@@ -14,16 +15,19 @@ namespace EncRotator
         private CheckBox[] buttons;
         public event EventHandler<RelayButtonStateChangedEventArgs> RelayButtonStateChanged;
         public event EventHandler<RelayLabelChangedEventArgs> RelayLabelChanged;
+        private List<String> _labels;
+        private Color buttonTextColor;
 
-        public FRelays( List<String> relayLabels )
+        public FRelays( List<String> labels )
         {
             InitializeComponent();
-            buttons = new CheckBox[relayLabels.Count()];
-            for (int co = 0; co < relayLabels.Count(); co++)
+            buttons = new CheckBox[labels.Count()];
+            _labels = labels;
+            for (int co = 0; co < labels.Count(); co++)
             {
                 int no = co;
                 CheckBox b = new CheckBox();
-                b.Text = relayLabels[co].Equals( String.Empty ) ? ( co + 1 ).ToString() : relayLabels[co];
+                b.Text = labels[co].Equals( String.Empty ) ? ( co + 1 ).ToString() : labels[co];
                 b.TextAlign = ContentAlignment.MiddleCenter;
                 b.Height = 25;
                 b.Width = Width - 7;
@@ -33,25 +37,45 @@ namespace EncRotator
                 b.Checked = false;
                 b.CheckedChanged += new EventHandler(delegate(object obj, EventArgs e)
                 {
-                    if ( b.Checked )
+                    if (b.Checked)
+                    {
                         for (int co0 = 0; co0 < buttons.Count(); co0++)
                             if (co0 != no)
                                 buttons[co0].Checked = false;
+                        b.ForeColor = Color.Red;
+                    }
+                    else
+                        b.ForeColor = buttonTextColor;
                     if (RelayButtonStateChanged != null)
                     {
                         RelayButtonStateChangedEventArgs ea = new RelayButtonStateChangedEventArgs { state = b.Checked, relay = no };
                         RelayButtonStateChanged(this, ea);
                     }
                 });
-                b.MouseClick += new MouseEventHandler(delegate(object obj, MouseEventArgs e)
+                b.MouseDown += new MouseEventHandler(delegate(object obj, MouseEventArgs e)
                 {
-                    if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                    if (e.Button == MouseButtons.Right)
                     {
+                        FInputBox ib = new FInputBox("Переименование кнопки", _labels[no]);
+                        ib.StartPosition = FormStartPosition.CenterParent;
+                        ib.ShowDialog(this);
+                        if (ib.DialogResult == DialogResult.OK)
+                        {
+                            _labels[no] = ib.value;
+                            b.Text = ib.value.Equals(string.Empty) ? (no + 1).ToString() : ib.value;
+                            if (RelayLabelChanged != null)
+                            {
+                                RelayLabelChangedEventArgs ea = new RelayLabelChangedEventArgs { relay = no, value = ib.value };
+                                RelayLabelChanged(this, ea);
+                            }
+                        }
+                        
                     }
                 });
                 Controls.Add(b);
                 buttons[co] = b;
             }
+            buttonTextColor = buttons[0].ForeColor;
         }
     }
 

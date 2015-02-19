@@ -1115,6 +1115,7 @@ namespace EncRotator
                     miRelays.Checked = false;
                 });
                 fr.RelayButtonStateChanged += relayButtonStateChanged;
+                fr.RelayLabelChanged += relayLabelChanged;
                 fr.Show(this);
             }
             else 
@@ -1128,6 +1129,11 @@ namespace EncRotator
             toggleLine(currentTemplate.relays[e.relay], e.state ? "1" : "0");
         }
 
+        private void relayLabelChanged(object obj, RelayLabelChangedEventArgs e)
+        {
+            currentConnection.relayLabels[e.relay] = e.value;
+            writeConfig();
+        }
 
     }
 
