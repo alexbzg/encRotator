@@ -47,10 +47,8 @@ namespace EncRotator
                     else
                         b.ForeColor = buttonTextColor;
                     if (RelayButtonStateChanged != null)
-                    {
-                        RelayButtonStateChangedEventArgs ea = new RelayButtonStateChangedEventArgs { state = b.Checked, relay = no };
-                        RelayButtonStateChanged(this, ea);
-                    }
+                        RelayButtonStateChanged(this, 
+                            new RelayButtonStateChangedEventArgs { state = b.Checked, relay = no } );
                 });
                 b.MouseDown += new MouseEventHandler(delegate(object obj, MouseEventArgs e)
                 {
@@ -64,10 +62,8 @@ namespace EncRotator
                             _labels[no] = ib.value;
                             b.Text = ib.value.Equals(string.Empty) ? (no + 1).ToString() : ib.value;
                             if (RelayLabelChanged != null)
-                            {
-                                RelayLabelChangedEventArgs ea = new RelayLabelChangedEventArgs { relay = no, value = ib.value };
-                                RelayLabelChanged(this, ea);
-                            }
+                                RelayLabelChanged(this, 
+                                    new RelayLabelChangedEventArgs { relay = no, value = ib.value });
                         }
                         
                     }

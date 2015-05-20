@@ -34,6 +34,7 @@ namespace EncRotator
             nudSlowInt.Value = cSettings.slowInt;
             cbDeviceType.SelectedIndex = cSettings.deviceType;
             chbSoft.Checked = cSettings.soft;
+            cbInvertRotation.Checked = cSettings.invertRotation;
 
             _data.name = cSettings.name;
             _data.host = cSettings.host;
@@ -44,6 +45,7 @@ namespace EncRotator
             _data.deviceType = cSettings.deviceType;
             _data.soft = cSettings.soft;
             _data.icon = cSettings.icon;
+            _data.invertRotation = cSettings.invertRotation;
 
             displayIcon();
         }
@@ -143,6 +145,11 @@ namespace EncRotator
             displayIcon();
         }
 
+        private void cbInvertRotation_Validated(object sender, EventArgs e)
+        {
+            _data.invertRotation = cbInvertRotation.Checked;
+        }
+
 
     }
 
@@ -157,6 +164,19 @@ namespace EncRotator
         private int _deviceType = 0;
         private bool _soft;
         private int _icon = 0;
+        private bool _invertRotation = false;
+
+        public bool invertRotation
+        {
+            get
+            {
+                return _invertRotation;
+            }
+            set
+            {
+                _invertRotation = value;
+            }
+        }
 
         public int icon
         {

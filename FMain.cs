@@ -30,6 +30,9 @@ namespace EncRotator
                                             ledLine = "20" },
                     new DeviceTemplate { engineLines = new Dictionary<int,string>{ {1, "5"}, {-1, "4"} }, slowLine = "3",
                                             relays = new String[] { "1", "2", "6", "9" },
+                                            adc = "1" }, 
+                    new DeviceTemplate { engineLines = new Dictionary<int,string>{ {1, "16"}, {-1, "15"} }, 
+                                            gearLines = new String[] { "1", "2", "3", "4" },
                                             adc = "1" } 
                                     };
         DeviceTemplate currentTemplate;
@@ -63,8 +66,11 @@ namespace EncRotator
         bool calibration = false;
         int curADCVal;
         int calCount = 0;
+        int curGear = -1;
         bool awaitingLimitConfirmation = false;
         FRelays fr = null;
+        int secOnGear0 = 0;
+        bool closingFl = false;
 
         public int getCurrentAngle() {
             return currentAngle;
@@ -132,8 +138,15 @@ namespace EncRotator
                 {1, currentConnection.limits[1] } };
 
             currentTemplate = getTemplate( currentConnection.deviceType );
-            for (int co = currentConnection.relayLabels.Count(); co < currentTemplate.relays.Count(); co++)
-                currentConnection.relayLabels.Add("");
+            if (currentConnection.invertRotation)
+            {
+                string swp = currentTemplate.engineLines[-1];
+                currentTemplate.engineLines[-1] = currentTemplate.engineLines[1];
+                currentTemplate.engineLines[1] = swp;
+            }
+            if ( currentTemplate.relays != null ) 
+                for (int co = currentConnection.relayLabels.Count(); co < currentTemplate.relays.Count(); co++)
+                    currentConnection.relayLabels.Add("");
             writeConfig();
 
 
@@ -144,9 +157,12 @@ namespace EncRotator
         private DeviceTemplate getTemplate(int deviceType)
         {
             if (deviceType == 0)
-                return templates[currentConnection.soft ? 0 : 1];
-            else
-                return templates[2];
+                return (DeviceTemplate)templates[currentConnection.soft ? 0 : 1].Clone();
+            else if (deviceType == 1)
+                return (DeviceTemplate)templates[2].Clone();
+            else 
+                return (DeviceTemplate)templates[3].Clone();
+
         }
 
 
@@ -178,6 +194,24 @@ namespace EncRotator
 
         }
 
+        private void setGear(int val)
+        {
+            if (curGear != val)
+            {
+                curGear = val;
+                System.Diagnostics.Debug.WriteLine("gear: " + curGear.ToString());
+                if (val == -1)
+                    currentTemplate.gearLines.ToList().ForEach(x => toggleLine(x, "0"));
+                else
+                {
+                    if (val == 0)
+                        secOnGear0 = 0;
+                    for (int co = 0; co < currentTemplate.gearLines.Count(); co++)
+                        toggleLine(currentTemplate.gearLines[co], co < currentTemplate.gearLines.Count() - val ? "1" : "0");
+                }
+            }
+        }
+
         public void engine(int val)
         {
             if ( val != engineStatus ) {
@@ -194,16 +228,21 @@ namespace EncRotator
                     else if (currentConnection.deviceType == 1)
                         setSlow(false);
                     toggleLine(currentTemplate.engineLines[engineStatus], "0");
+                    if (currentConnection.deviceType == 2)
+                        setGear(-1);
                 }
                 if ( val != 0 ) {
                     if (currentConnection.deviceType == 1)
                         setSlow(true);
+                    else if (currentConnection.deviceType == 2)
+                        setGear(0);
                     toggleLine(currentTemplate.engineLines[val], "1");
-                    if (currentConnection.deviceType == 0 && currentConnection.soft)
+                    if (currentConnection != null && currentConnection.deviceType == 0 && currentConnection.soft)
                     {
                         Thread.Sleep(500);
                         setSlow(true);
                     }
+
                 }
                 engineStatus = val;
                 System.Diagnostics.Debug.WriteLine("engine " + val.ToString());
@@ -220,29 +259,30 @@ namespace EncRotator
         }
 
         private void doDisconnect() {
-            this.Invoke((MethodInvoker)delegate
+            if (socket != null)
             {
-                Text = "Нет соединения";
-                Icon = (Icon)Resources.ResourceManager.GetObject(CommonInf.icons[0]);
-                miConnections.Text = "Соединения";
-                if (connectionsDropdown != null)
-                    miConnections.DropDownItems.AddRange(connectionsDropdown);
-                miSetNorth.Visible = false;
-                miCalibrate.Visible = false;
-                miClearStops.Visible = false;
-                timer.Enabled = false;
-                if (socket != null)
-                {
-                    if (currentConnection.deviceType == 0)
-                        toggleLine(currentTemplate.ledLine, "0");
-                    bgWorker.CancelAsync();
-                    if (socket.Connected)
-                        socket.Close();
-                    socket = null;
-                }
-                currentConnection = null;
-                pMap.Invalidate();
-            });
+                if (currentConnection.deviceType == 0)
+                    toggleLine(currentTemplate.ledLine, "0");
+                bgWorker.CancelAsync();
+                if (socket.Connected)
+                    socket.Close();
+                socket = null;
+            }
+            currentConnection = null;
+            if ( !closingFl )
+                this.Invoke((MethodInvoker)delegate
+                {                
+                    Text = "Нет соединения";
+                    Icon = (Icon)Resources.ResourceManager.GetObject(CommonInf.icons[0]);
+                    miConnections.Text = "Соединения";
+                    if (connectionsDropdown != null)
+                        miConnections.DropDownItems.AddRange(connectionsDropdown);
+                    miSetNorth.Visible = false;
+                    miCalibrate.Visible = false;
+                    miClearStops.Visible = false;
+                    timer.Enabled = false;
+                    pMap.Invalidate();
+                });
         }
 
         private string _socketRead()
@@ -340,7 +380,7 @@ namespace EncRotator
             {
                 socket = new TcpClient();
                 IAsyncResult connResult = socket.BeginConnect(host, Convert.ToInt32(port), null, null);
-                if (connResult.AsyncWaitHandle.WaitOne(5000, true))
+                if (connResult.AsyncWaitHandle.WaitOne(10000, true))
                 {
                     socket.SendTimeout = 50;
                     socket.ReceiveTimeout = 50;
@@ -370,6 +410,7 @@ namespace EncRotator
             while (socketBusy) { continue; }
             socketBusy = true;
             socketWrite("WR," + line + "," + state);
+            System.Diagnostics.Debug.WriteLine("WR," + line + "," + state);
             socketRead();
             socketBusy = false;
         }
@@ -457,7 +498,7 @@ namespace EncRotator
                             miClearStops.Visible = true;
                             updateMiClearStopsEnabled();
                         }
-                        else if (currentConnection.deviceType == 1)
+                        else if (currentConnection.deviceType == 1 || currentConnection.deviceType == 2)
                         {
                             miCalibrate.Visible = true;
                             miCalibrate.Text = "Калибровать";
@@ -526,7 +567,7 @@ namespace EncRotator
                                 dir = -dir;
                         }
                     }
-                    else if (currentConnection.deviceType == 1)
+                    else if (currentConnection.deviceType == 1 || currentConnection.deviceType == 2)
                     {
                         startAngle = currentAngle;
                         slowOffFlag = false;
@@ -578,14 +619,12 @@ namespace EncRotator
                         }
 
                     }
-                    else 
-                    {
+                    else if (currentConnection.deviceType == 1)
                         if (slowState && startAngle != -1 && !slowOffFlag && Math.Abs(startAngle - currentAngle) > currentConnection.slowInt)
                         {
                             setSlow(false);
                             slowOffFlag = true;
                         }
-                    }
                 }
                 currentAngle = newAngle;
                 angleChanged = true;
@@ -595,10 +634,18 @@ namespace EncRotator
                     pMap.Refresh();*/
                     int tD = aD(targetAngle, currentAngle);
 
-                    if (Math.Sign(tD) == engineStatus && !slowState && currentConnection.deviceType == 1 && Math.Abs(tD) < 2 * currentConnection.slowInt)
+                    if (Math.Sign(tD) == engineStatus && !slowState && currentConnection.deviceType == 1 && Math.Abs(tD) < 3 * currentConnection.slowInt)
                         setSlow(true);
 
-                    if (Math.Sign(tD) == engineStatus && Math.Abs(tD) < currentConnection.slowInt)
+                    if (Math.Sign(tD) == engineStatus && curGear > 0 && currentConnection.deviceType == 2
+                        && Math.Abs(tD) <= curGear * currentConnection.slowInt)
+                    {
+                        System.Diagnostics.Debug.WriteLine("gear- current: " + currentAngle.ToString() + " target: " + targetAngle.ToString());
+                        setGear(curGear - 1);
+                    }
+
+
+                    if (Math.Sign(tD) == engineStatus && Math.Abs(tD) < 3 )
                     {
                         engine(0);
                         targetAngle = -1;
@@ -644,7 +691,8 @@ namespace EncRotator
         private void pMap_Paint(object sender, PaintEventArgs e)
         {
             if (formState.currentMap != -1 && currentConnection != null && currentConnection.northAngle != -1 && 
-                ( currentConnection.deviceType == 0 || ( currentConnection.deviceType == 1 && currentConnection.calibrated ) ) )
+                ( currentConnection.deviceType == 0 || ( ( currentConnection.deviceType == 1 || currentConnection.deviceType == 2 ) 
+                && currentConnection.calibrated ) ) )
             {
                 Action<int,Color> drawAngle = (int angle, Color color) =>
                     {
@@ -675,7 +723,7 @@ namespace EncRotator
                     else
                         setCurrentMap(0);
             }
-            else if (currentConnection.northAngle != -1 && currentAngle != -1)
+            else if ( currentConnection != null && currentConnection.northAngle != -1 && currentAngle != -1)
             {
                 int angle;
                 if (e.X == pMap.Width / 2)
@@ -765,7 +813,7 @@ namespace EncRotator
                 if (!socketBusy)
                 {
                     socketBusy = true;
-                    if (currentConnection.deviceType == 0)
+                    if (currentConnection != null && currentConnection.deviceType == 0)
                     {
                         if (co++ > 9)
                         {
@@ -795,13 +843,11 @@ namespace EncRotator
                                 }
                             }
                             if (result.Contains("EVT") && !result.Contains("OK"))
-                            {
                                 bgWorker.ReportProgress(0, result);
-                            }
                             result = "";
                         }
                     }
-                    else if (currentConnection.deviceType == 1)
+                    else if (currentConnection.deviceType == 1 || currentConnection.deviceType == 2)
                     {
                         string result = "";
                         try 
@@ -834,10 +880,8 @@ namespace EncRotator
                 return;
             if (currentConnection.deviceType == 0)
                 processEVT((string)e.UserState);
-            else if (currentConnection.deviceType == 1)
-            {
+            else if (currentConnection.deviceType == 1 || currentConnection.deviceType == 2)
                 processADC(Convert.ToInt16(((string)e.UserState).Substring(7, 4)));
-            }
         }
 
         private void processADC(int adcVal)
@@ -864,10 +908,23 @@ namespace EncRotator
                 lAngle.Text = Convert.ToString(newADCVal);
                 if (calibration)
                 {
-                    if (curADCVal < newADCVal - 5 || curADCVal > newADCVal + 5)
+                    if (newADCVal == 1023 || newADCVal == 0)
+                    {
+                        calibration = false;
+                        calibrationStop();
+                        currentConnection.calibrated = false;
+                        writeConfig();
+                        MessageBox.Show("Достигнут предел значений АЦП. Калибровка невозможна");
+                    }
+                    else if (curADCVal < newADCVal - 5 || curADCVal > newADCVal + 5)
                     {
                         curADCVal = newADCVal;
                         calCount = 0;
+                        if ( currentConnection.deviceType == 1 )
+                            if (slowState && (curADCVal > 100 && curADCVal < 800))
+                                setSlow(false);
+                            else if (!slowState && (curADCVal < 100 || curADCVal > 800))
+                                setSlow(true);
                     }
                     else
                     {
@@ -913,6 +970,7 @@ namespace EncRotator
 
         private void fMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            closingFl = true;
             if (socket != null && socket.Connected)
             {
                 while (socketBusy) continue;
@@ -953,6 +1011,18 @@ namespace EncRotator
                         noMoveTime = 0;
                     }
             }
+            if (engineStatus != 0 && currentConnection.deviceType == 2 && curGear < currentTemplate.gearLines.Count())
+                if (curGear != 0 || ++secOnGear0 > 3)
+                {
+                    int tD = aD(targetAngle, currentAngle);
+                    if (Math.Sign(tD) == engineStatus && currentConnection.deviceType == 2 &&
+                        Math.Abs(tD) > ( curGear + 1 ) * currentConnection.slowInt)
+                    {
+                        System.Diagnostics.Debug.WriteLine("gear+ current: " + currentAngle.ToString() + " target: " + targetAngle.ToString());
+                        setGear(curGear + 1);
+                    }
+
+                }
         }
 
         private void miMapAdd_Click(object sender, EventArgs e)
@@ -1018,6 +1088,7 @@ namespace EncRotator
                 conn.deviceType = fParams.data.deviceType;
                 conn.soft = fParams.data.soft;
                 conn.icon = fParams.data.icon;
+                conn.invertRotation = fParams.data.invertRotation;
                 writeConfig();
                 if ( conn.Equals( currentConnection ) )
                 {
@@ -1149,7 +1220,7 @@ namespace EncRotator
 
     }
 
-    class DeviceTemplate
+    class DeviceTemplate : ICloneable
     {
         internal Dictionary<int, string> engineLines;
         internal string[] encLines;
@@ -1157,6 +1228,12 @@ namespace EncRotator
         internal string ledLine;
         internal string slowLine;
         internal string adc;
+        internal string[] gearLines;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 
     public class ConnectionSettings
@@ -1174,6 +1251,7 @@ namespace EncRotator
         public int icon = 0;
         public bool calibrated = false;
         public List<String> relayLabels = new List<String>();
+        public bool invertRotation = false;
     }
 
     public class FormState

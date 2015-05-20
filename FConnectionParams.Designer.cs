@@ -49,6 +49,7 @@
             this.pIcon = new System.Windows.Forms.Panel();
             this.bIconPrev = new System.Windows.Forms.Button();
             this.bIconNext = new System.Windows.Forms.Button();
+            this.cbInvertRotation = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSlowInt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,7 +58,7 @@
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.bOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bOK.Location = new System.Drawing.Point(124, 297);
+            this.bOK.Location = new System.Drawing.Point(124, 321);
             this.bOK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(112, 37);
@@ -70,7 +71,7 @@
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.bCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bCancel.Location = new System.Drawing.Point(246, 297);
+            this.bCancel.Location = new System.Drawing.Point(246, 321);
             this.bCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(112, 37);
@@ -199,7 +200,8 @@
             this.cbDeviceType.FormattingEnabled = true;
             this.cbDeviceType.Items.AddRange(new object[] {
             "Энкодер",
-            "Yaesu"});
+            "Yaesu",
+            "Yaesu v6"});
             this.cbDeviceType.Location = new System.Drawing.Point(179, 54);
             this.cbDeviceType.Name = "cbDeviceType";
             this.cbDeviceType.Size = new System.Drawing.Size(173, 28);
@@ -256,11 +258,23 @@
             this.bIconNext.UseVisualStyleBackColor = true;
             this.bIconNext.Click += new System.EventHandler(this.bIconNext_Click);
             // 
+            // cbInvertRotation
+            // 
+            this.cbInvertRotation.AutoSize = true;
+            this.cbInvertRotation.Location = new System.Drawing.Point(107, 289);
+            this.cbInvertRotation.Name = "cbInvertRotation";
+            this.cbInvertRotation.Size = new System.Drawing.Size(251, 24);
+            this.cbInvertRotation.TabIndex = 20;
+            this.cbInvertRotation.Text = "Инвертировать направления";
+            this.cbInvertRotation.UseVisualStyleBackColor = true;
+            this.cbInvertRotation.Validated += new System.EventHandler(this.cbInvertRotation_Validated);
+            // 
             // fConnectionParams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 343);
+            this.ClientSize = new System.Drawing.Size(364, 367);
+            this.Controls.Add(this.cbInvertRotation);
             this.Controls.Add(this.bIconPrev);
             this.Controls.Add(this.bIconNext);
             this.Controls.Add(this.pIcon);
@@ -314,5 +328,6 @@
         private System.Windows.Forms.Panel pIcon;
         private System.Windows.Forms.Button bIconPrev;
         private System.Windows.Forms.Button bIconNext;
+        private System.Windows.Forms.CheckBox cbInvertRotation;
     }
 }
