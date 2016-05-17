@@ -39,8 +39,6 @@
             this.tbHost = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
-            this.lUSARTPort = new System.Windows.Forms.Label();
-            this.tbUSARTPort = new System.Windows.Forms.TextBox();
             this.nudSlowInt = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.cbDeviceType = new System.Windows.Forms.ComboBox();
@@ -49,7 +47,6 @@
             this.pIcon = new System.Windows.Forms.Panel();
             this.bIconPrev = new System.Windows.Forms.Button();
             this.bIconNext = new System.Windows.Forms.Button();
-            this.cbInvertRotation = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSlowInt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,7 +55,7 @@
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.bOK.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bOK.Location = new System.Drawing.Point(124, 321);
+            this.bOK.Location = new System.Drawing.Point(124, 309);
             this.bOK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(112, 37);
@@ -71,7 +68,7 @@
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.bCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.bCancel.Location = new System.Drawing.Point(246, 321);
+            this.bCancel.Location = new System.Drawing.Point(246, 309);
             this.bCancel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(112, 37);
@@ -153,26 +150,9 @@
             this.tbName.TabIndex = 9;
             this.tbName.Validated += new System.EventHandler(this.tbName_Validated);
             // 
-            // lUSARTPort
-            // 
-            this.lUSARTPort.AutoSize = true;
-            this.lUSARTPort.Location = new System.Drawing.Point(14, 234);
-            this.lUSARTPort.Name = "lUSARTPort";
-            this.lUSARTPort.Size = new System.Drawing.Size(64, 20);
-            this.lUSARTPort.TabIndex = 12;
-            this.lUSARTPort.Text = "USART";
-            // 
-            // tbUSARTPort
-            // 
-            this.tbUSARTPort.Location = new System.Drawing.Point(86, 228);
-            this.tbUSARTPort.Name = "tbUSARTPort";
-            this.tbUSARTPort.Size = new System.Drawing.Size(266, 26);
-            this.tbUSARTPort.TabIndex = 13;
-            this.tbUSARTPort.Validated += new System.EventHandler(this.tbUSARTPort_Validated);
-            // 
             // nudSlowInt
             // 
-            this.nudSlowInt.Location = new System.Drawing.Point(282, 260);
+            this.nudSlowInt.Location = new System.Drawing.Point(282, 230);
             this.nudSlowInt.Name = "nudSlowInt";
             this.nudSlowInt.Size = new System.Drawing.Size(70, 26);
             this.nudSlowInt.TabIndex = 14;
@@ -189,7 +169,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(99, 266);
+            this.label5.Location = new System.Drawing.Point(99, 236);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(182, 20);
             this.label5.TabIndex = 15;
@@ -201,7 +181,10 @@
             this.cbDeviceType.Items.AddRange(new object[] {
             "Энкодер",
             "Yaesu",
-            "Yaesu v6"});
+            "Yaesu v6",
+            "Yaesu v6.3",
+            "Yaesu v6.4",
+            "Энкодер v3.0"});
             this.cbDeviceType.Location = new System.Drawing.Point(179, 54);
             this.cbDeviceType.Name = "cbDeviceType";
             this.cbDeviceType.Size = new System.Drawing.Size(173, 28);
@@ -258,23 +241,11 @@
             this.bIconNext.UseVisualStyleBackColor = true;
             this.bIconNext.Click += new System.EventHandler(this.bIconNext_Click);
             // 
-            // cbInvertRotation
-            // 
-            this.cbInvertRotation.AutoSize = true;
-            this.cbInvertRotation.Location = new System.Drawing.Point(107, 289);
-            this.cbInvertRotation.Name = "cbInvertRotation";
-            this.cbInvertRotation.Size = new System.Drawing.Size(251, 24);
-            this.cbInvertRotation.TabIndex = 20;
-            this.cbInvertRotation.Text = "Инвертировать направления";
-            this.cbInvertRotation.UseVisualStyleBackColor = true;
-            this.cbInvertRotation.Validated += new System.EventHandler(this.cbInvertRotation_Validated);
-            // 
             // fConnectionParams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 367);
-            this.Controls.Add(this.cbInvertRotation);
+            this.ClientSize = new System.Drawing.Size(364, 368);
             this.Controls.Add(this.bIconPrev);
             this.Controls.Add(this.bIconNext);
             this.Controls.Add(this.pIcon);
@@ -283,8 +254,6 @@
             this.Controls.Add(this.cbDeviceType);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.nudSlowInt);
-            this.Controls.Add(this.tbUSARTPort);
-            this.Controls.Add(this.lUSARTPort);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tbHost);
@@ -299,6 +268,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "fConnectionParams";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Параметры подключения";
             ((System.ComponentModel.ISupportInitialize)(this.nudSlowInt)).EndInit();
             this.ResumeLayout(false);
@@ -318,8 +288,6 @@
         private System.Windows.Forms.TextBox tbHost;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbName;
-        private System.Windows.Forms.Label lUSARTPort;
-        private System.Windows.Forms.TextBox tbUSARTPort;
         private System.Windows.Forms.NumericUpDown nudSlowInt;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cbDeviceType;
@@ -328,6 +296,5 @@
         private System.Windows.Forms.Panel pIcon;
         private System.Windows.Forms.Button bIconPrev;
         private System.Windows.Forms.Button bIconNext;
-        private System.Windows.Forms.CheckBox cbInvertRotation;
     }
 }

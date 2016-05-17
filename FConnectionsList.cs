@@ -17,7 +17,8 @@ namespace EncRotator
             InitializeComponent();
             state = fs;
             fillList();
-            lbConnections.SelectedIndex = 0;
+            if ( lbConnections.Items.Count > 0 )
+                lbConnections.SelectedIndex = 0;
         }
 
         private void fillList()
@@ -44,9 +45,18 @@ namespace EncRotator
             if (MessageBox.Show("Вы действительно хотите удалить соединение " + lbConnections.Items[lbConnections.SelectedIndex] + "?",
                 "Удаление соединения", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+                int sel = lbConnections.SelectedIndex;
                 state.connections.RemoveAt(lbConnections.SelectedIndex);
                 lbConnections.Items.RemoveAt(lbConnections.SelectedIndex);
                 ((fMain)this.Owner).writeConfig();
+                if (lbConnections.Items.Count > 0)
+                {
+                    if (sel < lbConnections.Items.Count)
+                        lbConnections.SelectedIndex = sel;
+                    else
+                        lbConnections.SelectedIndex = lbConnections.Items.Count - 1;
+                }
+
             }
         }
 

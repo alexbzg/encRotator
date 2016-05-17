@@ -47,5 +47,11 @@ namespace EncRotator
         {
             stopAngles[-1] = ((fMain)this.Owner).getCurrentAngle();
         }
+       
+        private void bDeleteStops_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Вы действительно хотите сбросить настройки концевиков?", "Подтверждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                ((fMain)this.Owner).clearStops();
+        }
     }
 }

@@ -39,7 +39,6 @@
             this.miMapRemove = new System.Windows.Forms.ToolStripMenuItem();
             this.miSetNorth = new System.Windows.Forms.ToolStripMenuItem();
             this.miCalibrate = new System.Windows.Forms.ToolStripMenuItem();
-            this.miClearStops = new System.Windows.Forms.ToolStripMenuItem();
             this.miModuleSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
             this.timer = new System.Windows.Forms.Timer(this.components);
@@ -54,6 +53,8 @@
             this.bStop = new System.Windows.Forms.ToolStripButton();
             this.ddSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.miRelays = new System.Windows.Forms.ToolStripMenuItem();
+            this.miIngnoreEngineOffMovement = new System.Windows.Forms.ToolStripMenuItem();
+            this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.slCalibration = new System.Windows.Forms.ToolStripLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).BeginInit();
@@ -66,21 +67,21 @@
             this.miNewConnection,
             this.miEditConnections});
             this.miConnections.Name = "miConnections";
-            this.miConnections.Size = new System.Drawing.Size(186, 22);
+            this.miConnections.Size = new System.Drawing.Size(210, 22);
             this.miConnections.Text = "Соединения";
             this.miConnections.Click += new System.EventHandler(this.miConnections_Click);
             // 
             // miNewConnection
             // 
             this.miNewConnection.Name = "miNewConnection";
-            this.miNewConnection.Size = new System.Drawing.Size(201, 22);
+            this.miNewConnection.Size = new System.Drawing.Size(196, 22);
             this.miNewConnection.Text = "Новое";
             this.miNewConnection.Click += new System.EventHandler(this.miNewConnection_Click);
             // 
             // miEditConnections
             // 
             this.miEditConnections.Name = "miEditConnections";
-            this.miEditConnections.Size = new System.Drawing.Size(201, 22);
+            this.miEditConnections.Size = new System.Drawing.Size(196, 22);
             this.miEditConnections.Text = "Редактировать список";
             this.miEditConnections.Click += new System.EventHandler(this.miEditConnections_Click);
             // 
@@ -90,51 +91,43 @@
             this.miMapAdd,
             this.miMapRemove});
             this.miMaps.Name = "miMaps";
-            this.miMaps.Size = new System.Drawing.Size(186, 22);
+            this.miMaps.Size = new System.Drawing.Size(210, 22);
             this.miMaps.Text = "Карты";
             // 
             // miMapAdd
             // 
             this.miMapAdd.Name = "miMapAdd";
-            this.miMapAdd.Size = new System.Drawing.Size(135, 22);
+            this.miMapAdd.Size = new System.Drawing.Size(126, 22);
             this.miMapAdd.Text = "Добавить";
             this.miMapAdd.Click += new System.EventHandler(this.miMapAdd_Click);
             // 
             // miMapRemove
             // 
             this.miMapRemove.Name = "miMapRemove";
-            this.miMapRemove.Size = new System.Drawing.Size(135, 22);
+            this.miMapRemove.Size = new System.Drawing.Size(126, 22);
             this.miMapRemove.Text = "Удалить";
             this.miMapRemove.Click += new System.EventHandler(this.miMapRemove_Click);
             // 
             // miSetNorth
             // 
             this.miSetNorth.Name = "miSetNorth";
-            this.miSetNorth.Size = new System.Drawing.Size(186, 22);
-            this.miSetNorth.Text = "Установить Север";
+            this.miSetNorth.Size = new System.Drawing.Size(210, 22);
+            this.miSetNorth.Text = "Настройки антенны";
             this.miSetNorth.Visible = false;
             this.miSetNorth.Click += new System.EventHandler(this.miSetNorth_Click);
             // 
             // miCalibrate
             // 
             this.miCalibrate.Name = "miCalibrate";
-            this.miCalibrate.Size = new System.Drawing.Size(186, 22);
+            this.miCalibrate.Size = new System.Drawing.Size(210, 22);
             this.miCalibrate.Text = "Калибровать";
             this.miCalibrate.Visible = false;
             this.miCalibrate.Click += new System.EventHandler(this.miCalibrate_Click);
             // 
-            // miClearStops
-            // 
-            this.miClearStops.Name = "miClearStops";
-            this.miClearStops.Size = new System.Drawing.Size(186, 22);
-            this.miClearStops.Text = "Удалить концевики";
-            this.miClearStops.Visible = false;
-            this.miClearStops.Click += new System.EventHandler(this.miClearStops_Click);
-            // 
             // miModuleSettings
             // 
             this.miModuleSettings.Name = "miModuleSettings";
-            this.miModuleSettings.Size = new System.Drawing.Size(186, 22);
+            this.miModuleSettings.Size = new System.Drawing.Size(210, 22);
             this.miModuleSettings.Text = "Настройки модуля";
             this.miModuleSettings.Click += new System.EventHandler(this.miModuleSettings_Click);
             // 
@@ -164,6 +157,7 @@
             this.pMap.TabStop = false;
             this.pMap.Paint += new System.Windows.Forms.PaintEventHandler(this.pMap_Paint);
             this.pMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pMap_MouseClick);
+            this.pMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pMap_MouseMove);
             this.pMap.Resize += new System.EventHandler(this.pMap_Resize);
             // 
             // toolStrip1
@@ -227,7 +221,8 @@
             // 
             this.lAngle.AutoSize = false;
             this.lAngle.Name = "lAngle";
-            this.lAngle.Size = new System.Drawing.Size(45, 23);
+            this.lAngle.Size = new System.Drawing.Size(90, 23);
+            this.lAngle.Text = "/";
             // 
             // toolStripSeparator2
             // 
@@ -256,24 +251,41 @@
             this.miMaps,
             this.miSetNorth,
             this.miCalibrate,
-            this.miClearStops,
             this.miRelays,
-            this.miModuleSettings});
+            this.miModuleSettings,
+            this.miIngnoreEngineOffMovement,
+            this.miAbout});
             this.ddSettings.ForeColor = System.Drawing.Color.Transparent;
             this.ddSettings.Image = ((System.Drawing.Image)(resources.GetObject("ddSettings.Image")));
             this.ddSettings.ImageTransparentColor = System.Drawing.Color.Black;
             this.ddSettings.Name = "ddSettings";
             this.ddSettings.Size = new System.Drawing.Size(29, 23);
-            this.ddSettings.Text = "toolStripDropDownButton1";
+            this.ddSettings.Text = "Настройки";
             // 
             // miRelays
             // 
             this.miRelays.CheckOnClick = true;
             this.miRelays.Name = "miRelays";
-            this.miRelays.Size = new System.Drawing.Size(186, 22);
+            this.miRelays.Size = new System.Drawing.Size(210, 22);
             this.miRelays.Text = "Управление реле";
             this.miRelays.Visible = false;
             this.miRelays.CheckStateChanged += new System.EventHandler(this.miRelays_CheckStateChanged);
+            // 
+            // miIngnoreEngineOffMovement
+            // 
+            this.miIngnoreEngineOffMovement.CheckOnClick = true;
+            this.miIngnoreEngineOffMovement.Name = "miIngnoreEngineOffMovement";
+            this.miIngnoreEngineOffMovement.Size = new System.Drawing.Size(210, 22);
+            this.miIngnoreEngineOffMovement.Text = "Игнорировать движение";
+            this.miIngnoreEngineOffMovement.Visible = false;
+            this.miIngnoreEngineOffMovement.CheckStateChanged += new System.EventHandler(this.miIngnoreEngineOffMovement_CheckStateChanged);
+            // 
+            // miAbout
+            // 
+            this.miAbout.Name = "miAbout";
+            this.miAbout.Size = new System.Drawing.Size(210, 22);
+            this.miAbout.Text = "О программе";
+            this.miAbout.Click += new System.EventHandler(this.miAbout_Click);
             // 
             // toolStripSeparator3
             // 
@@ -300,6 +312,9 @@
             this.Name = "fMain";
             this.Text = "Нет соединения";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fMain_FormClosing);
+            this.Load += new System.EventHandler(this.fMain_Load);
+            this.ResizeEnd += new System.EventHandler(this.fMain_ResizeEnd);
+            this.LocationChanged += new System.EventHandler(this.fMain_ResizeEnd);
             this.Resize += new System.EventHandler(this.fMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).EndInit();
             this.toolStrip1.ResumeLayout(false);
@@ -321,7 +336,6 @@
         private System.Windows.Forms.ToolStripMenuItem miNewConnection;
         private System.Windows.Forms.ToolStripMenuItem miCalibrate;
         private System.Windows.Forms.PictureBox pMap;
-        private System.Windows.Forms.ToolStripMenuItem miClearStops;
         private System.Windows.Forms.ToolStripMenuItem miMaps;
         private System.Windows.Forms.ToolStripMenuItem miMapAdd;
         private System.Windows.Forms.ToolStripMenuItem miMapRemove;
@@ -337,6 +351,8 @@
         private System.Windows.Forms.ToolStripLabel slCalibration;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem miRelays;
+        private System.Windows.Forms.ToolStripMenuItem miAbout;
+        private System.Windows.Forms.ToolStripMenuItem miIngnoreEngineOffMovement;
     }
 }
 

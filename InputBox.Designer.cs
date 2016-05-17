@@ -76,6 +76,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FInputBox";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.ResumeLayout(false);
             this.PerformLayout();
 

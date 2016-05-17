@@ -22,7 +22,7 @@ namespace EncRotator
             }
         }
 
-        public fConnectionParams( ConnectionSettings cSettings )
+        public fConnectionParams(ConnectionSettings cSettings)
         {
             InitializeComponent();
 
@@ -30,11 +30,10 @@ namespace EncRotator
             tbHost.Text = cSettings.host;
             tbPort.Text = cSettings.port;
             tbPassword.Text = cSettings.password;
-            tbUSARTPort.Text = cSettings.usartPort;
             nudSlowInt.Value = cSettings.slowInt;
             cbDeviceType.SelectedIndex = cSettings.deviceType;
             chbSoft.Checked = cSettings.soft;
-            cbInvertRotation.Checked = cSettings.invertRotation;
+
 
             _data.name = cSettings.name;
             _data.host = cSettings.host;
@@ -45,14 +44,13 @@ namespace EncRotator
             _data.deviceType = cSettings.deviceType;
             _data.soft = cSettings.soft;
             _data.icon = cSettings.icon;
-            _data.invertRotation = cSettings.invertRotation;
 
             displayIcon();
         }
 
         private void displayIcon()
         {
-            bmIcon = Bitmap.FromHicon( ((Icon) Resources.ResourceManager.GetObject( CommonInf.icons[ _data.icon ] ) ).Handle );
+            bmIcon = Bitmap.FromHicon(((Icon)Resources.ResourceManager.GetObject(CommonInf.icons[_data.icon])).Handle);
             pIcon.BackgroundImage = bmIcon;
         }
 
@@ -77,25 +75,17 @@ namespace EncRotator
             if (tbPort.Text.Trim().Length > 0)
             {
                 _data.port = tbPort.Text.Trim();
-            }            
+            }
         }
 
 
-        private void tbUSARTPort_Validated(object sender, EventArgs e)
-        {
-            if (tbUSARTPort.Text.Trim().Length > 0)
-            {
-                _data.usartPort = tbUSARTPort.Text.Trim();
-            }            
-
-        }
 
         private void tbName_Validated(object sender, EventArgs e)
         {
             if (tbName.Text.Trim().Length > 0)
             {
                 _data.name = tbName.Text.Trim();
-            }            
+            }
 
         }
 
@@ -145,12 +135,6 @@ namespace EncRotator
             displayIcon();
         }
 
-        private void cbInvertRotation_Validated(object sender, EventArgs e)
-        {
-            _data.invertRotation = cbInvertRotation.Checked;
-        }
-
-
     }
 
     public class ConnectionParamsData
@@ -164,19 +148,7 @@ namespace EncRotator
         private int _deviceType = 0;
         private bool _soft;
         private int _icon = 0;
-        private bool _invertRotation = false;
 
-        public bool invertRotation
-        {
-            get
-            {
-                return _invertRotation;
-            }
-            set
-            {
-                _invertRotation = value;
-            }
-        }
 
         public int icon
         {
