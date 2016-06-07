@@ -90,6 +90,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FSetsList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FSetsList.Designer.cs">
+      <DependentUpon>FSetsList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="UpdatesChecker.cs" />
     <Compile Include="FConnectionsList.cs">
@@ -144,6 +150,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FConnectionParams.resx">
       <DependentUpon>FConnectionParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FSetsList.resx">
+      <DependentUpon>FSetsList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FConnectionsList.resx">
       <DependentUpon>FConnectionsList.cs</DependentUpon>

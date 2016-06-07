@@ -360,7 +360,8 @@ namespace EncRotator
                         dbgResult = result;
                         if (result.Contains("\n") && (result.Contains("SLINF") || result.Contains("FLAGS") || result.Contains("JConfig")))
                             result = "";
-                        //System.Diagnostics.Debug.WriteLine(result);
+                        if (result.Contains("\n"))
+                            System.Diagnostics.Debug.WriteLine(result);
                     }
                 } catch ( Exception e ) {
                     if (socket != null)
