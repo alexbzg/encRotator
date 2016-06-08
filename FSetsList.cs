@@ -24,14 +24,14 @@ namespace EncRotator
         private void fillList()
         {
             lbSets.Items.Clear();
-            foreach (ConnectionSettings cs in state.connections)
-                lbSets.Items.Add(cs.name);
+            foreach (ConnectionGroup cg in state.connectionGroups)
+                lbSets.Items.Add(cg.name);
 
         }
 
         private void bEdit_Click(object sender, EventArgs e)
         {
-            if (((fMain)this.Owner).editConnection(state.connections[lbSets.SelectedIndex]))
+            if (((fMain)this.Owner).editConnectionGroup(state.connections[lbSets.SelectedIndex]))
             {
                 int sel = lbSets.SelectedIndex;
                 fillList();
@@ -46,7 +46,7 @@ namespace EncRotator
                 "Удаление соединения", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 int sel = lbSets.SelectedIndex;
-                state.connections.RemoveAt(lbSets.SelectedIndex);
+                state.connectionGroups.RemoveAt(lbSets.SelectedIndex);
                 lbSets.Items.RemoveAt(lbSets.SelectedIndex);
                 ((fMain)this.Owner).writeConfig();
                 if (lbSets.Items.Count > 0)

@@ -49,6 +49,12 @@ namespace EncRotator
                                             stopLine = "14",
                                             slowLine = "13" }, //6 Энкодер плавный пуск
                                     };
+
+        internal bool editConnectionGroup(ConnectionSettings connectionSettings)
+        {
+            throw new NotImplementedException();
+        }
+
         DeviceTemplate currentTemplate;
         volatile TcpClient socket;
         volatile bool socketBusy;
@@ -1503,12 +1509,25 @@ namespace EncRotator
         public bool ignoreEngineOffMovement = false;
     }
 
+    public class ConnectionGroupEntry
+    {
+        public int connectionId;
+        public List<int> esMhz = new List<int>();
+    }
+
+    public class ConnectionGroup
+    {
+        public string name;
+        public List<ConnectionGroupEntry> connections = new List<ConnectionGroupEntry>();
+    }
+
     public class FormState
     {
         public int currentConnection = -1;
         public List<string> maps = new List<string>();
         public int currentMap = -1;
         public List<ConnectionSettings> connections = new List<ConnectionSettings>();
+        public List<ConnectionGroup> connectionGroups = new List<ConnectionGroup>();
     }
 
     public static class CommonInf
