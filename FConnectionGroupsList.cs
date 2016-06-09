@@ -9,10 +9,10 @@ using System.Windows.Forms;
 
 namespace EncRotator
 {
-    public partial class FSetsList : Form
+    public partial class FConnectionGroupsList : Form
     {
         FormState state;
-        public FSetsList(FormState fs)
+        public FConnectionGroupsList(FormState fs)
         {
             InitializeComponent();
             state = fs;

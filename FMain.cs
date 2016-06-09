@@ -1507,18 +1507,49 @@ namespace EncRotator
         public System.Drawing.Point formLocation;
         public System.Drawing.Size formSize;
         public bool ignoreEngineOffMovement = false;
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 
     public class ConnectionGroupEntry
     {
         public int connectionId;
-        public List<int> esMhz = new List<int>();
+        public int esMhz;
     }
 
-    public class ConnectionGroup
+    public class ConnectionGroup : ICloneable
     {
         public string name;
-        public List<ConnectionGroupEntry> connections = new List<ConnectionGroupEntry>();
+        public List<ConnectionGroupEntry> items = new List<ConnectionGroupEntry>();
+
+        public bool contains( int id )
+        {
+            return items.Exists(x => x.connectionId == id);
+        }
+
+        public string mhzStr( int id )
+        {
+            if (contains(id))
+                return string.Join(";", items.Where(x => x.connectionId == id).Select(x => x.esMhz.ToString()));
+            else
+                return "";
+        }
+
+        public void removeConnection( int id )
+        {
+            if (contains(id))
+                items.RemoveAll(x => x.connectionId == id);
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+
     }
 
     public class FormState

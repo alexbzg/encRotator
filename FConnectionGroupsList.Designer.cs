@@ -1,6 +1,6 @@
 ﻿namespace EncRotator
 {
-    partial class FSetsList
+    partial class FConnectionGroupsList
     {
         /// <summary>
         /// Требуется переменная конструктора.
@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FConnectionsList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FConnectionGroupsList));
             this.lbSets = new System.Windows.Forms.ListBox();
             this.bEdit = new System.Windows.Forms.Button();
             this.bDelete = new System.Windows.Forms.Button();
             this.bOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // lbConnections
+            // lbSets
             // 
             this.lbSets.FormattingEnabled = true;
             this.lbSets.ItemHeight = 20;
             this.lbSets.Location = new System.Drawing.Point(0, 0);
             this.lbSets.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.lbSets.Name = "lbConnections";
+            this.lbSets.Name = "lbSets";
             this.lbSets.Size = new System.Drawing.Size(439, 444);
             this.lbSets.TabIndex = 0;
             // 
@@ -75,7 +75,7 @@
             this.bOK.UseVisualStyleBackColor = true;
             this.bOK.Click += new System.EventHandler(this.bOK_Click);
             // 
-            // FConnectionsList
+            // FSetsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -87,9 +87,9 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "FConnectionsList";
+            this.Name = "FSetsList";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Соединения";
+            this.Text = "Группы соединений";
             this.ResumeLayout(false);
 
         }
