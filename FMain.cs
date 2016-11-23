@@ -946,8 +946,7 @@ namespace EncRotator
                     };
                 drawAngle(currentAngle, Color.Red );
                 drawAngle(targetAngle, Color.Green );
-                if ( currentTemplate.adc == null )
-                    limits.Values.ToList<int>().ForEach(item => drawAngle(item, Color.Gray));
+                limits.Values.ToList<int>().ForEach(item => drawAngle(item, Color.Gray));
                 //e.Graphics.DrawImage(bmpMap, new Rectangle( 0, 0, pMap.Width, pMap.Height) );
                 mapAngle = currentAngle;
             }
