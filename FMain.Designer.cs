@@ -46,10 +46,8 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.bSizeM = new System.Windows.Forms.ToolStripButton();
             this.bSizeP = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.slMvt = new System.Windows.Forms.ToolStripLabel();
             this.lAngle = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bStop = new System.Windows.Forms.ToolStripButton();
             this.ddSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.miConnectionGroups = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,9 +56,9 @@
             this.miIngnoreEngineOffMovement = new System.Windows.Forms.ToolStripMenuItem();
             this.miExpertSync = new System.Windows.Forms.ToolStripMenuItem();
             this.miAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.slCalibration = new System.Windows.Forms.ToolStripLabel();
             this.lCaption = new System.Windows.Forms.Label();
+            this.lOverlap = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pMap)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -169,14 +167,12 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bSizeM,
             this.bSizeP,
-            this.toolStripSeparator1,
             this.slMvt,
-            this.lAngle,
-            this.toolStripSeparator2,
             this.bStop,
+            this.lAngle,
             this.ddSettings,
-            this.toolStripSeparator3,
             this.slCalibration});
+            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(526, 26);
@@ -206,11 +202,6 @@
             this.bSizeP.Text = "+";
             this.bSizeP.Click += new System.EventHandler(this.lSizeP_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 26);
-            // 
             // slMvt
             // 
             this.slMvt.AutoSize = false;
@@ -225,24 +216,19 @@
             // 
             this.lAngle.AutoSize = false;
             this.lAngle.Name = "lAngle";
-            this.lAngle.Size = new System.Drawing.Size(90, 23);
+            this.lAngle.Size = new System.Drawing.Size(70, 23);
             this.lAngle.Text = "/";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
             // 
             // bStop
             // 
             this.bStop.BackColor = System.Drawing.Color.Red;
             this.bStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.bStop.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.bStop.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.bStop.ForeColor = System.Drawing.Color.White;
             this.bStop.Image = ((System.Drawing.Image)(resources.GetObject("bStop.Image")));
             this.bStop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.bStop.Name = "bStop";
-            this.bStop.Size = new System.Drawing.Size(57, 23);
+            this.bStop.Size = new System.Drawing.Size(43, 23);
             this.bStop.Text = " Stop ";
             this.bStop.Click += new System.EventHandler(this.bStop_Click);
             // 
@@ -316,11 +302,6 @@
             this.miAbout.Text = "О программе";
             this.miAbout.Click += new System.EventHandler(this.miAbout_Click);
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 26);
-            // 
             // slCalibration
             // 
             this.slCalibration.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -341,11 +322,24 @@
             this.lCaption.TabIndex = 18;
             this.lCaption.Text = "Нет соединения";
             // 
+            // lOverlap
+            // 
+            this.lOverlap.AutoSize = true;
+            this.lOverlap.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lOverlap.ForeColor = System.Drawing.Color.Red;
+            this.lOverlap.Location = new System.Drawing.Point(6, 68);
+            this.lOverlap.Name = "lOverlap";
+            this.lOverlap.Size = new System.Drawing.Size(78, 16);
+            this.lOverlap.TabIndex = 19;
+            this.lOverlap.Text = "OVERLAP";
+            this.lOverlap.Visible = false;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(526, 453);
+            this.Controls.Add(this.lOverlap);
             this.Controls.Add(this.lCaption);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pMap);
@@ -385,12 +379,9 @@
         private System.Windows.Forms.ToolStripButton bSizeP;
         private System.Windows.Forms.ToolStripButton bStop;
         private System.Windows.Forms.ToolStripDropDownButton ddSettings;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel slMvt;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripLabel lAngle;
         private System.Windows.Forms.ToolStripLabel slCalibration;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem miRelays;
         private System.Windows.Forms.ToolStripMenuItem miAbout;
         private System.Windows.Forms.ToolStripMenuItem miIngnoreEngineOffMovement;
@@ -398,6 +389,7 @@
         private System.Windows.Forms.ToolStripMenuItem miConnectionGroupsList;
         private System.Windows.Forms.ToolStripMenuItem miExpertSync;
         private System.Windows.Forms.Label lCaption;
+        private System.Windows.Forms.Label lOverlap;
     }
 }
 

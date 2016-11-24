@@ -894,7 +894,15 @@ namespace EncRotator
                 }
                 int displayAngle = currentAngle;
                 if (currentConnection.northAngle != -1)
-                    displayAngle += ( displayAngle < currentConnection.northAngle ? 360 : 0 ) - currentConnection.northAngle;
+                {
+                    displayAngle -= currentConnection.northAngle;
+                    while (displayAngle < 0)
+                        displayAngle += 360;
+                    while (displayAngle > 360)
+                        displayAngle -= 360;
+                }
+                if (currentTemplate.adc != null)
+                    lOverlap.Visible = currentAngle > 360;
 
                 showAngleLabel(displayAngle, -1);
               /*  if (targetAngle != -1)
@@ -946,7 +954,14 @@ namespace EncRotator
                     };
                 drawAngle(currentAngle, Color.Red );
                 drawAngle(targetAngle, Color.Green );
-                limits.Values.ToList<int>().ForEach(item => drawAngle(item, Color.Gray));
+                if ( currentTemplate.adc == null )
+                    limits.Values.ToList().ForEach(item => drawAngle(item, Color.Gray));
+                else
+                {
+                    drawAngle(0, Color.Gray);
+                    drawAngle(450, Color.Gray);
+                }
+
                 //e.Graphics.DrawImage(bmpMap, new Rectangle( 0, 0, pMap.Width, pMap.Height) );
                 mapAngle = currentAngle;
             }
